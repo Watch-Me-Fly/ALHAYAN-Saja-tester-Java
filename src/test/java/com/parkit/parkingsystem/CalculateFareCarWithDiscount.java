@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Date;
 
-public class calculateFareCarWithDiscount {
+public class CalculateFareCarWithDiscount {
     private static FareCalculatorService fareCalculatorService;
     private Ticket ticket;
 

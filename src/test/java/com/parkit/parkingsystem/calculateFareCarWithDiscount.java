@@ -12,11 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Date;
 
-// ce test doit appeler la méthode calculateFare avec un ticket concernant une voiture
-// et avec le paramètre discount à true,
-// puis vérifier que le prix calculé est est
-// bien de 95% du tarif plein. La durée du ticket doit être de plus de 30 minutes.
-
 public class calculateFareCarWithDiscount {
     private static FareCalculatorService fareCalculatorService;
     private Ticket ticket;

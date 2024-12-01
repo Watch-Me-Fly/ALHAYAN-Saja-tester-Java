@@ -40,6 +40,6 @@ public class CalculateFareCarWithDiscountTest {
         fareCalculatorService.calculateFare(ticket, true);
 
         double expectedPrice = Fare.CAR_RATE_PER_HOUR * 0.95; // 5% discount
-        assertEquals(expectedPrice,ticket.getPrice(),0, "Should give a 5% discount for regulars in cars.");
+        assertEquals(expectedPrice,ticket.getPrice(), "Should give a 5% discount for regulars in cars.");
     }
 }

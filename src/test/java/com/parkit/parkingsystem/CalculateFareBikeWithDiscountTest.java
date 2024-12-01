@@ -39,6 +39,6 @@ public class CalculateFareBikeWithDiscountTest {
         fareCalculatorService.calculateFare(ticket, true);
 
         double expectedRate = Fare.BIKE_RATE_PER_HOUR * 0.95; // 5% discount
-        assertEquals(expectedRate, ticket.getPrice(),0,"Should give a 5% discount for regulars on bikes.");
+        assertEquals(expectedRate, ticket.getPrice(),"Should give a 5% discount for regulars on bikes.");
     }
 }

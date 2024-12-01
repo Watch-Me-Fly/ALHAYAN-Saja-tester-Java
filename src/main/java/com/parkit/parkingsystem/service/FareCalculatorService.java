@@ -10,13 +10,19 @@ public class FareCalculatorService {
             throw new IllegalArgumentException("Out time provided is incorrect:"+ticket.getOutTime().toString());
         }
 
-
         long inHour = ticket.getInTime().getTime();
         long outHour = ticket.getOutTime().getTime();
 
         long durationMillis = outHour - inHour;
 
         long durationMin = durationMillis / (60 * 1000);
+
+        if (durationMin < 30)
+        {
+            ticket.setPrice(0.0);
+            return;
+        }
+
         double durationHrs = durationMin / 60.0;
 
         switch (ticket.getParkingSpot().getParkingType()){

@@ -12,12 +12,7 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/*
-    En tant qu’utilisateur, je veux pouvoir me garer pour une courte durée sans avoir à payer.
- */
-
-public class CalculateFareCarWithLessThan30minutesParkingTime {
-
+public class CalculateFareBikeWithLessThan30minutesParkingTimeTest {
     private static FareCalculatorService fareCalculatorService;
     private Ticket ticket;
 
@@ -25,18 +20,16 @@ public class CalculateFareCarWithLessThan30minutesParkingTime {
     public static void setUp() {
         fareCalculatorService = new FareCalculatorService();
     }
-
     @BeforeEach
     public void setUpPerTest() {
         ticket = new Ticket();
     }
-
     @Test
-    public void lessThan30MinutesCar () {
-        ParkingSpot parkingSpot = new ParkingSpot(4, ParkingType.CAR, false);
+    public void lessThan30MinBike () {
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE, false);
 
         Date inTime = new Date();
-        inTime.setTime(System.currentTimeMillis() -  (20 * 60 * 1000) );
+        inTime.setTime(System.currentTimeMillis() - (25 * 60 * 1000) );
         Date outTime = new Date();
 
         ticket.setInTime(inTime);

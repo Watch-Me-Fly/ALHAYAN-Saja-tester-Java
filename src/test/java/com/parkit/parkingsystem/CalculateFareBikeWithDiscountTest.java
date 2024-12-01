@@ -13,7 +13,7 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CalculateFareBikeWithDiscount {
+public class CalculateFareBikeWithDiscountTest {
     private static FareCalculatorService fareCalculatorService;
     private Ticket ticket;
 

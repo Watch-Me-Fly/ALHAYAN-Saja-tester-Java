@@ -8,6 +8,7 @@ import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -52,9 +53,16 @@ public class ParkingServiceTest {
         }
     }
 
+    @DisplayName("Process exiting vehicle test")
     @Test
     public void processExitingVehicleTest(){
+        // set up behaviour
+        when(ticketDAO.getNbTicket("ABCDEF")).thenReturn(2);
+        // execute
         parkingService.processExitingVehicle();
+        // verify
+        verify(ticketDAO, times(1)).getNbTicket("ABCDEF");
+        verify(ticketDAO, times(1)).updateTicket(any(Ticket.class));
         verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
     }
 

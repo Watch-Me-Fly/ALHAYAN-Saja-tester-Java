@@ -69,10 +69,18 @@ public class ParkingDataBaseIT {
     @DisplayName("Check fare generated and out-time")
     @Test
     public void testParkingLotExit(){
+
         testParkingACar();
+
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+
         parkingService.processExitingVehicle();
-        //TODO: check that the fare generated and out time are populated correctly in the database
+
+        Ticket ticket = ticketDAO.getTicket("ABCDEF");
+        assertNotNull(ticket);
+        assertEquals(0.0, ticket.getPrice());
+        assertNotNull(ticket.getOutTime());
+
     }
 
 }

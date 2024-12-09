@@ -7,6 +7,7 @@ import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,6 +29,7 @@ public class FareCalculatorServiceTest {
         ticket = new Ticket();
     }
 
+    @DisplayName("Calculate fare for a car")
     @Test
     public void calculateFareCar(){
         Date inTime = new Date();
@@ -42,6 +44,7 @@ public class FareCalculatorServiceTest {
         assertEquals(ticket.getPrice(), Fare.CAR_RATE_PER_HOUR);
     }
 
+    @DisplayName("Calculate fare for a bike")
     @Test
     public void calculateFareBike(){
         Date inTime = new Date();
@@ -56,19 +59,26 @@ public class FareCalculatorServiceTest {
         assertEquals(ticket.getPrice(), Fare.BIKE_RATE_PER_HOUR);
     }
 
+    @DisplayName("Calculate fare for unknown vehicle")
     @Test
-    public void calculateFareUnkownType(){
+    public void calculateFareUnknownVehicle(){
         Date inTime = new Date();
         inTime.setTime( System.currentTimeMillis() - (  60 * 60 * 1000) );
         Date outTime = new Date();
-        ParkingSpot parkingSpot = new ParkingSpot(1, null,false);
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.UNKNOWN, false);
 
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
-        assertThrows(NullPointerException.class, () -> fareCalculatorService.calculateFare(ticket));
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> fareCalculatorService.calculateFare(ticket),
+                "Expected calculateFare to throw an exception for unknown parking type"
+        );
+        assertEquals("Unkown Parking Type", exception.getMessage());
     }
 
+    @DisplayName("In-time is after out-time")
     @Test
     public void calculateFareBikeWithFutureInTime(){
         Date inTime = new Date();
@@ -82,11 +92,11 @@ public class FareCalculatorServiceTest {
         assertThrows(IllegalArgumentException.class, () -> fareCalculatorService.calculateFare(ticket));
     }
 
+    @DisplayName("Calculate fare with less than 1 hour parking - bike")
     @Test
     public void calculateFareBikeWithLessThanOneHourParkingTime(){
         Date inTime = new Date();
         inTime.setTime( System.currentTimeMillis() - (  45 * 60 * 1000) ); //45 minutes parking time should give 3/4th parking fare
-        System.out.println("inTime = " + inTime);
         Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE,false);
 
@@ -97,6 +107,7 @@ public class FareCalculatorServiceTest {
         assertEquals((0.75 * Fare.BIKE_RATE_PER_HOUR), ticket.getPrice() );
     }
 
+    @DisplayName("Calculate fare with less than 1 hour parking - car")
     @Test
     public void calculateFareCarWithLessThanOneHourParkingTime(){
         Date inTime = new Date();
@@ -111,6 +122,7 @@ public class FareCalculatorServiceTest {
         assertEquals( (0.75 * Fare.CAR_RATE_PER_HOUR) , ticket.getPrice());
     }
 
+    @DisplayName("Parking for more than a day")
     @Test
     public void calculateFareCarWithMoreThanADayParkingTime(){
         Date inTime = new Date();

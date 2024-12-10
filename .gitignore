@@ -1,0 +1,6 @@
+## project files ##
+.idea
+.DS_Store
+target/
+pom.xml
+

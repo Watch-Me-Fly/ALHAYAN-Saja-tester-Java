@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,7 +51,9 @@ public class CalculateFareBikeWithDiscountTest {
             expectedRate = 0;
         } else {
             double durationInHours = durationInMinutes / 60.0;
-            expectedRate = (Fare.BIKE_RATE_PER_HOUR * durationInHours) * 0.95; // 5% discount
+            double priceReduced = (Fare.BIKE_RATE_PER_HOUR * durationInHours) * 0.95; // 5% discount
+            BigDecimal roundedNumber = new BigDecimal(priceReduced).setScale(2, RoundingMode.HALF_UP);
+            expectedRate = roundedNumber.doubleValue();
         }
         assertEquals(expectedRate, ticket.getPrice(), 0.01, "Should give a 5% discount for regulars on bikes.");
     }

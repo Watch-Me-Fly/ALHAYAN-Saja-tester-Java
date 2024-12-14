@@ -8,6 +8,9 @@ import com.parkit.parkingsystem.service.FareCalculatorService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,6 +40,7 @@ public class CalculateFareCarWithDiscountTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
 
+        // convert milliseconds to minutes to check if eligible for free parking
         double differenceInMS = ticket.getOutTime().getTime() - ticket.getInTime().getTime();
         double durationInMinutes = differenceInMS / (60 * 1000);
         double expectedRate;
@@ -47,7 +51,10 @@ public class CalculateFareCarWithDiscountTest {
             expectedRate = 0;
         } else {
             double durationInHours = durationInMinutes / 60.0;
-            expectedRate = (Fare.CAR_RATE_PER_HOUR * durationInHours) * 0.95; // 5% discount
+            double priceReduced = (Fare.CAR_RATE_PER_HOUR * durationInHours) * 0.95; // 5% discount
+
+            BigDecimal roundedNumber = new BigDecimal(priceReduced).setScale(2, RoundingMode.HALF_UP);
+            expectedRate = roundedNumber.doubleValue();
         }
 
         assertEquals(expectedRate, ticket.getPrice(), 0.01,

@@ -4,3 +4,5 @@
 target/
 pom.xml
 
+src/main/java/com/parkit/parkingsystem/config/DataBaseConfig.java
+src/test/java/com/parkit/parkingsystem/integration/config/DataBaseTestConfig.java

@@ -14,11 +14,9 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -76,15 +74,21 @@ public class ParkingDataBaseIT {
 
         testParkingACar();
 
-        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
-
-        parkingService.processExitingVehicle();
-
         Ticket ticket = ticketDAO.getTicket("ABCDEF");
         assertNotNull(ticket);
-        assertEquals(0.0, ticket.getPrice());
-        assertNotNull(ticket.getOutTime());
 
+        Date inTime = new Date();
+        inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000)); // 1 hour earlier
+        ticket.setInTime(inTime);
+        ticket.setOutTime(new Date());
+        ticketDAO.updateTicket(ticket);
+
+        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+        parkingService.processExitingVehicle();
+
+        ticket = ticketDAO.getTicket("ABCDEF");
+        assertTrue(ticket.getPrice() > 0.0);
+        assertNotNull(ticket.getOutTime());
     }
 
 

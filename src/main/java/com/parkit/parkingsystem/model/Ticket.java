@@ -1,6 +1,7 @@
 package com.parkit.parkingsystem.model;
 
-import java.util.Calendar;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 public class Ticket {
@@ -36,7 +37,8 @@ public class Ticket {
     }
 
     public double getPrice() {
-        return price;
+        BigDecimal roundedPrice = new BigDecimal(price).setScale(2, RoundingMode.HALF_UP);
+        return roundedPrice.doubleValue();
     }
 
     public void setPrice(double price) {

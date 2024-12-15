@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,24 +23,36 @@ public class CalculateFareBikeWithDiscountTest {
     public static void setUp() {
         fareCalculatorService = new FareCalculatorService();
     }
+
     @BeforeEach
     public void setupTicket() {
         ticket = new Ticket();
     }
+
     @Test
     public void bikeWithDiscount() {
         ParkingSpot parkingSpot = new ParkingSpot(2, ParkingType.BIKE, false);
         ticket.setParkingSpot(parkingSpot);
 
         Date inTime = new Date();
-        inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000) ); // 1h
+        int inMinutes = 60; // set parking duration in minutes here
+        inTime.setTime(System.currentTimeMillis() - (inMinutes * 60 * 1000));
         Date outTime = new Date();
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
 
+        double differenceInMS = ticket.getOutTime().getTime() - ticket.getInTime().getTime();
+        double durationInMinutes = differenceInMS / (60 * 1000);
+        double expectedRate;
+
         fareCalculatorService.calculateFare(ticket, true);
 
-        double expectedRate = Fare.BIKE_RATE_PER_HOUR * 0.95; // 5% discount
-        assertEquals(expectedRate, ticket.getPrice(),"Should give a 5% discount for regulars on bikes.");
+        if (durationInMinutes < 30) {
+            expectedRate = 0;
+        } else {
+            double durationInHours = durationInMinutes / 60.0;
+            expectedRate = (Fare.BIKE_RATE_PER_HOUR * durationInHours) * 0.95; // 5% discount
+        }
+        assertEquals(expectedRate, ticket.getPrice(), 0.01, "Should give a 5% discount for regulars on bikes.");
     }
 }

@@ -51,10 +51,7 @@ public class CalculateFareCarWithDiscountTest {
             expectedRate = 0;
         } else {
             double durationInHours = durationInMinutes / 60.0;
-            double priceReduced = (Fare.CAR_RATE_PER_HOUR * durationInHours) * 0.95; // 5% discount
-
-            BigDecimal roundedNumber = new BigDecimal(priceReduced).setScale(2, RoundingMode.HALF_UP);
-            expectedRate = roundedNumber.doubleValue();
+            expectedRate = (Fare.CAR_RATE_PER_HOUR * durationInHours) * 0.95; // 5% discount
         }
 
         assertEquals(expectedRate, ticket.getPrice(), 0.01,

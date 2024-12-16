@@ -14,6 +14,9 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -116,7 +119,8 @@ public class ParkingDataBaseIT {
         Ticket newTicket = ticketDAO.getTicket("ABCDEF");
         assertNotNull(newTicket);
         double expectedPrice = Fare.CAR_RATE_PER_HOUR * 0.95;
-        assertEquals(expectedPrice, newTicket.getPrice());
+        BigDecimal roundedPrice = new BigDecimal(expectedPrice).setScale(2, RoundingMode.HALF_UP);
+        assertEquals(roundedPrice.doubleValue(), newTicket.getPrice());
 
     }
 
